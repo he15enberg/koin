@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:koin/data/isar/isar_service.dart';
 import 'package:koin/features/authentication/screens/onboarding/onboarding.dart';
@@ -7,6 +8,7 @@ import 'package:koin/features/authentication/screens/permissions/notification_pe
 import 'package:koin/features/authentication/screens/personal_info/personal_info.dart';
 import 'package:koin/features/authentication/screens/permissions/sms_permission.dart';
 import 'package:koin/features/authentication/screens/sms_data/sms_data.dart';
+import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
 import 'package:koin/navigation_menu.dart';
 
 class SplashController extends GetxController {
@@ -15,7 +17,11 @@ class SplashController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    // FlutterNativeSplash.remove();
+    _loadDataAndNavigate();
+  }
+
+  Future<void> _loadDataAndNavigate() async {
+    FlutterNativeSplash.remove();
     checkAndNavigate();
   }
 

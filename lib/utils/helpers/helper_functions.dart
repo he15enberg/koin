@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:koin/utils/constants/colors.dart';
 
 class THelperFunctions {
-  static Color getThemeModeColor(bool isDark, double opacity) {
-    return isDark
+  static Color getThemeModeColor({double opacity = 1, bool invert = false}) {
+    final isDark = isDarkMode(Get.context!);
+    final effectiveDarkMode = invert ? !isDark : isDark;
+
+    return effectiveDarkMode
         ? Colors.white.withAlpha((opacity * 255).toInt())
         : Colors.black.withAlpha((opacity * 255).toInt());
+  }
+
+  static Color getPrimaryWithOpecity({double opacity = 1}) {
+    return TColors.primary.withAlpha((opacity * 255).toInt());
   }
 
   static Color? getColor(String value) {

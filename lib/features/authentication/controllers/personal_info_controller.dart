@@ -8,18 +8,18 @@ import 'package:koin/features/authentication/screens/permissions/sms_permission.
 class PersonaInfoController extends GetxController {
   static PersonaInfoController get instance => Get.find();
 
-  final username = TextEditingController();
-  final phoneNumber = TextEditingController();
+  final usernameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  Rx<File?> profileImage = Rx<File?>(null);
+  Rx<File?> profileImageFile = Rx<File?>(null);
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      profileImage.value = File(pickedFile.path);
+      profileImageFile.value = File(pickedFile.path);
     }
   }
 
@@ -29,9 +29,9 @@ class PersonaInfoController extends GetxController {
 
       // Update Isar settings model
       service.settings.update((val) {
-        val?.username = username.text;
-        val?.phoneNumber = phoneNumber.text;
-        val?.profileImagePath = profileImage.value?.path;
+        val?.username = usernameController.text;
+        val?.phoneNumber = phoneNumberController.text;
+        val?.profileImagePath = profileImageFile.value?.path;
         val?.personalInfoCompleted = true;
       });
 
@@ -44,8 +44,8 @@ class PersonaInfoController extends GetxController {
 
   @override
   void onClose() {
-    username.dispose();
-    phoneNumber.dispose();
+    usernameController.dispose();
+    phoneNumberController.dispose();
     super.onClose();
   }
 }

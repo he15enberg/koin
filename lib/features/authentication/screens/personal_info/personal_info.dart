@@ -56,7 +56,7 @@ class PersonaInfoScreen extends StatelessWidget {
                 Row(
                   children: [
                     Obx(() {
-                      final image = controller.profileImage.value;
+                      final image = controller.profileImageFile.value;
                       return GestureDetector(
                         onTap: controller.pickImage,
                         child: KProfileImage(image: image),
@@ -90,7 +90,7 @@ class PersonaInfoScreen extends StatelessWidget {
                 //Email
                 SizedBox(height: TSizes.spaceBtwSections),
                 TextFormField(
-                  controller: controller.username,
+                  controller: controller.usernameController,
                   validator: (value) =>
                       TValidator.validateEmptyText("Name", value),
                   decoration: const InputDecoration(
@@ -101,7 +101,7 @@ class PersonaInfoScreen extends StatelessWidget {
                 SizedBox(height: TSizes.spaceBtwInputFields),
 
                 TextFormField(
-                  controller: controller.phoneNumber,
+                  controller: controller.phoneNumberController,
                   validator: (value) => TValidator.validatePhoneNumber(value),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Iconsax.call),
@@ -117,6 +117,8 @@ class PersonaInfoScreen extends StatelessWidget {
                     child: const Text("Get Started"),
                   ),
                 ),
+                const SizedBox(height: 15),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
@@ -148,14 +150,14 @@ class KProfileImage extends StatelessWidget {
         radius: Radius.circular(10),
         dashPattern: [10, 5],
         strokeWidth: 2,
-        color: THelperFunctions.getThemeModeColor(isDark, 0.25),
+        color: THelperFunctions.getThemeModeColor(opacity: 0.25),
       ),
       child: Container(
         height: 100,
         width: 100,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         child: image != null
-            ? Image.asset(image!.path, fit: BoxFit.cover)
+            ? Image.file(image!, fit: BoxFit.cover)
             : Center(
                 child: Container(
                   height: 40,
@@ -166,7 +168,9 @@ class KProfileImage extends StatelessWidget {
                       Icon(
                         Iconsax.gallery,
                         size: 30,
-                        color: THelperFunctions.getThemeModeColor(isDark, 0.75),
+                        color: THelperFunctions.getThemeModeColor(
+                          opacity: 0.75,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,

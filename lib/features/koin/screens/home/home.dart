@@ -1,45 +1,76 @@
+import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:koin/common/widgets/appbar/home_appbar.dart';
+import 'package:koin/common/widgets/button/icon_button.dart';
+import 'package:koin/common/widgets/button/simple_circular_icon_button.dart';
+import 'package:koin/common/widgets/button/utility_icon_button.dart';
+import 'package:koin/features/koin/controllers/home_controller.dart';
+import 'package:koin/features/koin/controllers/profile_controller.dart';
+import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
+import 'package:koin/features/koin/screens/home/widgets/accounts.dart';
+import 'package:koin/features/koin/screens/home/widgets/circular_budget_bar.dart';
+import 'package:koin/features/koin/screens/home/widgets/dues_reminders.dart';
+import 'package:koin/features/koin/screens/home/widgets/transactions_listvew.dart';
+import 'package:koin/utils/constants/colors.dart';
 import 'package:koin/utils/constants/sizes.dart';
+import 'package:koin/utils/helpers/formatters.dart';
+import 'package:koin/utils/helpers/helper_functions.dart';
+import 'dart:math' as math;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final formatRupees = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
+    final isDark = THelperFunctions.isDarkMode(context);
+    final transactionController = TransactionController.instance;
 
     return Scaffold(
       appBar: KHomeAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 150,
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: const Color.fromARGB(255, 5, 5, 5),
+            //Circular Progress Bar
+            KCircularBudgetProgress(),
+
+            Divider(color: isDark ? TColors.darkerGrey : TColors.grey),
+            //Transactions ListView
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: TSizes.defaultSpace,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Expense in July",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.white.withAlpha(150),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        KIconButton(text: "Trends", icon: Iconsax.chart_1),
+                        KIconButton(
+                          text: "Categories",
+                          icon: Iconsax.element_3,
                         ),
-                      ),
-                      Text(
-                        formatRupees.format(12345.0),
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 10),
+                  Obx(
+                    () => KTransactionsListView(
+                      itemCount: 5,
+                      transactions:
+                          transactionController.currentMonthTransactions,
+                      isLoading: transactionController.isLoading.value,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  KDuesAndReminders(),
+                  SizedBox(height: 15),
+                  KAccounts(),
+                  SizedBox(height: 15),
                 ],
               ),
             ),
