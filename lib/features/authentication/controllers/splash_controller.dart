@@ -10,6 +10,7 @@ import 'package:koin/features/authentication/screens/permissions/sms_permission.
 import 'package:koin/features/authentication/screens/sms_data/sms_data.dart';
 import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
 import 'package:koin/navigation_menu.dart';
+import 'package:koin/utils/services/sms_listener.dart';
 
 class SplashController extends GetxController {
   static SplashController get instance => Get.find();
@@ -17,31 +18,46 @@ class SplashController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _loadDataAndNavigate();
+    _initialize();
   }
 
-  Future<void> _loadDataAndNavigate() async {
+  Future<void> _initialize() async {
     FlutterNativeSplash.remove();
-    checkAndNavigate();
+
+    // Small delay to ensure Isar is ready
+    await Future.delayed(Duration(milliseconds: 100));
+
+    await _checkAndNavigate();
   }
 
-  Future<void> checkAndNavigate() async {
-    final settings = await IsarService.instance.settings();
+  Future<void> _checkAndNavigate() async {
+    try {
+      final settings = await IsarService.instance.settings();
 
-    if (!settings.onboardingCompleted) {
-      Get.offAll(() => const OnBoardingScreen());
-    } else if (!settings.personalInfoCompleted) {
-      Get.offAll(() => const PersonaInfoScreen());
-    } else if (!settings.smsContactGranted) {
-      Get.offAll(() => const SmsPermissionScreen());
-    } else if (!settings.notificationGranted) {
-      Get.offAll(() => const NotificationPermissionScreen());
-    } else if (!settings.locationGranted) {
-      Get.offAll(() => const LocationPermissionScreen());
-    } else if (!settings.smsProcessingCompleted) {
-      Get.offAll(() => const SmsDataScreen());
-    } else {
-      Get.offAll(() => const NavigationMenu());
+      // Initialize SMS listener if processing is complete
+      if (settings.smsProcessingCompleted && !SmsListenerService.isListening) {
+        await SmsListenerService.initialize();
+      }
+
+      // Navigate based on completion status
+      if (!settings.onboardingCompleted) {
+        Get.offAll(() => const OnBoardingScreen());
+      } else if (!settings.personalInfoCompleted) {
+        Get.offAll(() => const PersonaInfoScreen());
+      } else if (!settings.smsContactGranted) {
+        Get.offAll(() => const SmsPermissionScreen());
+      } else if (!settings.notificationGranted) {
+        Get.offAll(() => const NotificationPermissionScreen());
+      } else if (!settings.locationGranted) {
+        Get.offAll(() => const LocationPermissionScreen());
+      } else if (!settings.smsProcessingCompleted) {
+        Get.offAll(() => const SmsDataScreen());
+      } else {
+        Get.offAll(() => const NavigationMenu());
+      }
+    } catch (e) {
+      print('Error in splash navigation: $e');
+      Get.offAll(() => const OnBoardingScreen()); // Fallback
     }
   }
 }

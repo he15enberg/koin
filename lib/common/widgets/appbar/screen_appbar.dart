@@ -12,8 +12,10 @@ import 'package:koin/utils/constants/sizes.dart';
 import 'package:koin/utils/helpers/helper_functions.dart';
 
 class KScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const KScreenAppBar({super.key, required this.text});
-  final String text;
+  const KScreenAppBar({super.key, this.text, this.child, this.action});
+  final String? text;
+  final Widget? child;
+  final Widget? action;
   @override
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
@@ -30,11 +32,23 @@ class KScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: Iconsax.arrow_left,
               iconsize: 20,
               padding: 5,
-              iconColor: isDark ? TColors.white : TColors.black,
-              backgroundColor: isDark ? TColors.darkerGrey : TColors.grey,
             ),
           ),
-          Text(text, style: Theme.of(context).textTheme.titleMedium),
+          child ??
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        text ?? "App Bar",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+                    action ?? Container(),
+                  ],
+                ),
+              ),
         ],
       ),
     );

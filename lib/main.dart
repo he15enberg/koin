@@ -4,21 +4,30 @@ import 'package:get/get.dart';
 import 'package:koin/data/isar/isar_service.dart';
 import 'package:koin/features/authentication/controllers/splash_controller.dart';
 import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
+import 'package:koin/utils/services/sms_listener.dart';
 import 'app.dart';
 
 Future<void> main() async {
-  final WidgetsBinding widgetsBinding =
-      WidgetsFlutterBinding.ensureInitialized();
-  //Init Local Storage
-  await Get.putAsync(() => IsarService().init(), permanent: true);
-  Get.put(TransactionController(), permanent: true);
+  WidgetsFlutterBinding.ensureInitialized();
 
-  Get.put(SplashController(), permanent: true);
-  //Init Payment Methods
-  //Await Native Splash
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  try {
+    // Single Isar initialization
+    if (!Get.isRegistered<IsarService>()) {
+      await Get.putAsync(() => IsarService().init(), permanent: true);
+    }
 
-  // Init Hive
+    // Initialize controllers only once
+    if (!Get.isRegistered<TransactionController>()) {
+      Get.put(TransactionController(), permanent: true);
+    }
+    if (!Get.isRegistered<SplashController>()) {
+      Get.put(SplashController(), permanent: true);
+    }
+
+    print('App initialization completed');
+  } catch (e) {
+    print('Error during app initialization: $e');
+  }
 
   runApp(const App());
 }

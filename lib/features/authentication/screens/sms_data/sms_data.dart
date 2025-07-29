@@ -87,7 +87,10 @@ class SmsDataScreen extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => controller.processSmsMessages(),
+            onPressed: () {
+              controller.processSmsMessages();
+              controller.completeProcessingAndStartListener();
+            },
             child: Text("Extract Transactions"),
           ),
         ),

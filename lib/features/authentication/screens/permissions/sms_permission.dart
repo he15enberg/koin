@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:koin/common/chips/simple_icon_text_chip.dart';
+import 'package:koin/common/widgets/chips/simple_icon_text_chip.dart';
 import 'package:koin/common/widgets/images/oonboading_image.dart';
 import 'package:koin/features/authentication/controllers/permissions_controller.dart.dart';
 import 'package:koin/features/authentication/screens/permissions/location_permission.dart';

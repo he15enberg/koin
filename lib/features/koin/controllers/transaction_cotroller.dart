@@ -21,7 +21,7 @@ class TransactionController extends GetxController {
     final allTransactions = await IsarService.instance.getAllTransactions();
     final monthTransactions = await IsarService.instance
         .getCurrentMonthTransactions();
-
+    print(monthTransactions.length);
     transactions.assignAll(allTransactions);
     currentMonthTransactions.assignAll(monthTransactions);
 

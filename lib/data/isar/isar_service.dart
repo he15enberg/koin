@@ -50,6 +50,12 @@ class IsarService extends GetxService {
     await save();
   }
 
+  Future<void> saveTransaction(TransactionModel transaction) async {
+    await _isar.writeTxn(() async {
+      await _isar.transactionModels.put(transaction);
+    });
+  }
+
   Future<List<TransactionModel>> getAllTransactions() async {
     return await _isar.transactionModels.where().findAll();
   }

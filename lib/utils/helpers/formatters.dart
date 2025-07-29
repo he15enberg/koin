@@ -58,4 +58,50 @@ class KFormatters {
     return categoryData[category] ??
         {"icon": Iconsax.information, "color": Colors.grey};
   }
+
+  static String formatDateTimeToLongString(DateTime dateTime) {
+    final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final weekday = weekdays[dateTime.weekday % 7];
+    final month = months[dateTime.month - 1];
+    final day = dateTime.day;
+
+    String suffix;
+    if (day >= 11 && day <= 13) {
+      suffix = 'th';
+    } else {
+      switch (day % 10) {
+        case 1:
+          suffix = 'st';
+          break;
+        case 2:
+          suffix = 'nd';
+          break;
+        case 3:
+          suffix = 'rd';
+          break;
+        default:
+          suffix = 'th';
+      }
+    }
+
+    final hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final ampm = dateTime.hour >= 12 ? 'pm' : 'am';
+
+    return '$weekday, ${day}$suffix $month, $hour:$minute $ampm';
+  }
 }

@@ -30,6 +30,10 @@ dependencies:
   flutter_contacts: ^1.1.9+2
   shimmer: ^3.0.0
   dashed_circular_progress_bar: ^0.0.6
+  another_telephony: ^0.4.1
+  flutter_background_service: ^5.1.0
+  easy_sms_receiver: ^0.0.2
+  animated_expand: ^1.0.2
 
 dev_dependencies:
   flutter_test:

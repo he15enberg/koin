@@ -7,6 +7,7 @@ import 'package:koin/common/widgets/appbar/home_appbar.dart';
 import 'package:koin/common/widgets/button/icon_button.dart';
 import 'package:koin/common/widgets/button/simple_circular_icon_button.dart';
 import 'package:koin/common/widgets/button/utility_icon_button.dart';
+import 'package:koin/features/koin/controllers/all_transactions_controller.dart.dart';
 import 'package:koin/features/koin/controllers/home_controller.dart';
 import 'package:koin/features/koin/controllers/profile_controller.dart';
 import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
@@ -27,6 +28,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
     final transactionController = TransactionController.instance;
+    final allTransactionsController = Get.put(AllTransactionsController());
 
     return Scaffold(
       appBar: KHomeAppBar(),
@@ -39,9 +41,7 @@ class HomeScreen extends StatelessWidget {
             Divider(color: isDark ? TColors.darkerGrey : TColors.grey),
             //Transactions ListView
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: TSizes.defaultSpace,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 children: [
                   Padding(

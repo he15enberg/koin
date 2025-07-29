@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- Notifications (for Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Background SMS Reciever -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
         android:label="koin"
         android:name="${applicationName}"

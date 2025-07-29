@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:koin/bindings/initial_bindings.dart';
-import 'package:koin/features/authentication/screens/onboarding/onboarding.dart';
-import 'package:koin/features/authentication/screens/permissions/sms_permission.dart';
-import 'package:koin/features/authentication/screens/personal_info/personal_info.dart';
-import 'package:koin/navigation_menu.dart';
 import 'utils/constants/colors.dart';
 import 'utils/constants/text_strings.dart';
 import 'utils/theme/theme.dart';

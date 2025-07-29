@@ -5,17 +5,41 @@ import 'package:koin/utils/helpers/cateogry_classifier.dart';
 import 'package:koin/utils/helpers/merchant_name.dart';
 
 class SmsParser {
-  static SmsTransactionModel? parseTransaction(SmsMessage msg) {
+  static SmsTransactionModel? parseTransaction(dynamic msg) {
     try {
-      final body = msg.body ?? '';
-      final sender = msg.address ?? '';
+      // Extract common fields from either message type
+      String body;
+      String sender;
+      DateTime date;
+
+      if (msg is SmsMessage) {
+        // flutter_sms_inbox message
+        body = msg.body ?? '';
+        sender = msg.address ?? '';
+        date = msg.date ?? DateTime.now();
+      } else {
+        // another_telephony message or background service message
+        body = msg.body ?? '';
+        sender = msg.address ?? '';
+        // Handle different date property names safely
+        try {
+          date = msg.date ?? DateTime.now();
+        } catch (e) {
+          // If date property doesn't exist, use current time
+          date = DateTime.now();
+        }
+      }
+
+      if (body.isEmpty || sender.isEmpty) return null;
 
       final bankCodes = BankDirectory.getBankCodes();
+
       // Extract bank code
       final bankCode = bankCodes.firstWhere(
         (code) => sender.toUpperCase().contains(code.toUpperCase()),
         orElse: () => sender,
       );
+
       // Add Bank Info
       final bankInfo = BankDirectory.getBankInfo(bankCode);
       final bankName = bankInfo?.name ?? bankCode;
@@ -28,6 +52,8 @@ class SmsParser {
           ? double.tryParse(amountMatch.group(1)!.replaceAll(',', '')) ?? 0.0
           : 0.0;
 
+      if (amount <= 0) return null;
+
       // Extract account last 4 digits
       final accountRegex = RegExp(r'[xX*]{4,}\d{4}|\d{4}');
       final accountMatch = accountRegex.firstMatch(body);
@@ -38,13 +64,11 @@ class SmsParser {
         body,
       );
 
-      // Extract merchant name (simple approach - text after "at" or "to")
-      //
-
       String merchantName = MerchantExtractor.extractMerchantName(
         body,
         smsType,
       );
+
       // Extract reference number
       final refRegex = RegExp(
         r'Ref\.?\s*:?\s*(\w+)|UPI Ref\.?\s*(\w+)|Txn\.?\s*(\w+)',
@@ -54,7 +78,6 @@ class SmsParser {
           refMatch?.group(1) ?? refMatch?.group(2) ?? refMatch?.group(3) ?? '';
 
       // Classify transaction category
-
       final category = CategoryClassifier.classifyTransaction(
         merchantName,
         smsType,
@@ -67,13 +90,13 @@ class SmsParser {
         bankPhoto: bankPhoto,
         accountLastFourDigits: accountLastFour,
         merchantName: merchantName,
-        dateTime: msg.date ?? DateTime.now(),
+        dateTime: date,
         referenceNumber: referenceNumber,
         smsType: smsType,
         messageAddress: sender,
         messageBody: body,
         merchantPhoto: null,
-        category: category, // Add the classified category
+        category: category,
       );
     } catch (e) {
       print('Error parsing transaction: $e');
@@ -100,6 +123,7 @@ class SmsParserHelper {
     'deposit',
     'added',
   ];
+
   static SmsTransactionType getTransactionType(String body) {
     final lowerBody = body.toLowerCase();
 

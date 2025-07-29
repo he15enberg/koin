@@ -1,6 +1,7 @@
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:koin/common/widgets/button/simple_circular_icon_button.dart';
 import 'package:koin/features/koin/controllers/home_controller.dart';
 import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
 import 'package:koin/utils/constants/colors.dart';
@@ -39,7 +40,7 @@ class KCircularBudgetProgress extends StatelessWidget {
           ),
           SizedBox(height: 15.0),
           Container(
-            height: THelperFunctions.screenHeight() * 0.25,
+            height: THelperFunctions.screenHeight() * 0.2,
             width: THelperFunctions.screenWidth(),
             child: DashedCircularProgressBar.aspectRatio(
               aspectRatio: 1, // width ÷ height
@@ -49,9 +50,10 @@ class KCircularBudgetProgress extends StatelessWidget {
               startAngle: 0, // Start from top
               sweepAngle: 360, // Full circle
               foregroundColor: TColors.primary,
-              backgroundColor: const Color(0xffeeeeee),
-              foregroundStrokeWidth: 12.5,
-              backgroundStrokeWidth: 12.5,
+              backgroundColor: isDark ? TColors.darkestGrey : TColors.grey,
+              foregroundStrokeWidth: 10,
+              backgroundStrokeWidth: 10,
+
               animation: true,
               seekSize: 5,
               seekColor: const Color(0xffeeeeee),
@@ -62,13 +64,9 @@ class KCircularBudgetProgress extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: TColors.grey,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.arrow_outward, color: Colors.black),
+                        KSimpleCircularIconButton(
+                          icon: Icons.arrow_outward,
+                          iconsize: 17.5,
                         ),
                         SizedBox(height: 5),
                         Obx(
@@ -76,7 +74,7 @@ class KCircularBudgetProgress extends StatelessWidget {
                             KFormatters.formatToRupees(
                               transactionController.currentMonthSpend.value,
                             ),
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                       ],

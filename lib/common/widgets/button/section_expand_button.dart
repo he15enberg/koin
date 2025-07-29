@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:koin/utils/helpers/helper_functions.dart';
 
 class KSectionExpandButton extends StatelessWidget {
-  const KSectionExpandButton({super.key});
-
+  const KSectionExpandButton({super.key, this.onTap});
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
         child: Row(

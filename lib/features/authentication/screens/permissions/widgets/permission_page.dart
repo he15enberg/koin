@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:koin/common/chips/simple_icon_text_chip.dart';
+import 'package:koin/common/widgets/chips/simple_icon_text_chip.dart';
 import 'package:koin/common/widgets/icons/circular_icon.dart';
 import 'package:koin/common/widgets/images/oonboading_image.dart';
 import 'package:koin/utils/constants/colors.dart';

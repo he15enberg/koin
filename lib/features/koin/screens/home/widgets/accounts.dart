@@ -134,11 +134,7 @@ class KAccounts extends StatelessWidget {
                                     ),
                                     KSimpleCircularIconButton(
                                       icon: Icons.arrow_outward,
-                                      backgroundColor: isDark
-                                          ? TColors.darkerGrey
-                                          : TColors.grey,
-                                      iconColor:
-                                          THelperFunctions.getThemeModeColor(),
+
                                       iconsize: 20,
                                     ),
                                   ],
