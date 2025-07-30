@@ -1,6 +1,36 @@
 import 'package:koin/features/authentication/models/transaction_model.dart';
 
 class CategoryClassifier {
+  static const List<String> spendCategories = [
+    'bills',
+    'emi',
+    'entertainment',
+    'food',
+    'fuel',
+    'groceries',
+    'health',
+    'investment',
+    'shopping',
+    'transfer',
+    'travel',
+  ];
+
+  static const List<String> creditCategories = [
+    'transfer',
+    'deposit',
+    'bill_payment',
+    'business',
+    'credit',
+    'interest',
+    'investment',
+    'loan',
+    'recharge',
+    'refund',
+    'reimbursement',
+    'reward',
+    'salary',
+  ];
+
   static const Map<String, List<String>> _spendKeywords = {
     'bills': [
       'electricity',

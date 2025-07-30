@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:koin/features/koin/controllers/all_transactions_controller.dart.dart';
 import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
 import 'package:koin/features/koin/screens/home/widgets/circular_budget_bar.dart';
 import 'package:koin/features/koin/screens/home/widgets/transactions_listvew.dart';
@@ -10,7 +11,7 @@ class KTransactionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transactionController = TransactionController.instance;
+    final allTranactionController = AllTransactionsController.instance;
 
     return Column(
       children: [
@@ -23,8 +24,8 @@ class KTransactionsSection extends StatelessWidget {
           child: Obx(
             () => KTransactionsListView(
               isSectionExpandButtonNeeded: false,
-              transactions: transactionController.currentMonthTransactions,
-              isLoading: transactionController.isLoading.value,
+              transactions: allTranactionController.monthTransactions,
+              isLoading: allTranactionController.isLoading.value,
             ),
           ),
         ),

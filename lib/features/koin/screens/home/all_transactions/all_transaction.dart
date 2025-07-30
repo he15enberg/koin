@@ -1,4 +1,5 @@
 import 'package:animated_expand/animated_expand.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -9,6 +10,7 @@ import 'package:koin/features/koin/controllers/all_transactions_controller.dart.
 import 'package:koin/features/koin/screens/home/all_transactions/sections/transactions_section.dart';
 import 'package:koin/features/koin/screens/home/widgets/circular_budget_bar.dart';
 import 'package:koin/utils/constants/colors.dart';
+import 'package:koin/utils/helpers/formatters.dart';
 import 'package:koin/utils/helpers/helper_functions.dart';
 
 class AllTransactionsScreen extends StatelessWidget {
@@ -85,13 +87,114 @@ class AllTransactionsScreen extends StatelessWidget {
               sizeFactor: controller.sizeAnimation,
               axisAlignment: -1.0,
               child: Container(
-                color: TColors.primary,
                 height: 150,
                 width: double.infinity,
-                child: Center(
-                  child: Text(
-                    'Expandable Content',
-                    style: TextStyle(color: Colors.white),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    height: 150,
+                    width: controller.availableMonths.length * 50.0,
+                    padding: EdgeInsets.all(16),
+                    child: Obx(
+                      () => BarChart(
+                        BarChartData(
+                          alignment: BarChartAlignment.spaceAround,
+                          barTouchData: BarTouchData(
+                            enabled: true,
+                            handleBuiltInTouches: false,
+                            touchCallback:
+                                (FlTouchEvent event, barTouchResponse) {
+                                  if (event is FlTapUpEvent &&
+                                      barTouchResponse?.spot != null) {
+                                    final index = barTouchResponse!
+                                        .spot!
+                                        .touchedBarGroupIndex;
+                                    final month = controller
+                                        .availableMonths
+                                        .reversed
+                                        .toList()[index];
+                                    // Change selected month
+                                    controller.changeMonth(month["key"]);
+                                  }
+                                },
+                          ),
+
+                          barGroups: controller.availableMonths.reversed
+                              .toList()
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                                final index = entry.key;
+                                final month = entry.value;
+                                final isSelected =
+                                    controller.selectedMonth.value ==
+                                    month["key"];
+
+                                return BarChartGroupData(
+                                  x: index,
+                                  barRods: [
+                                    BarChartRodData(
+                                      borderRadius: BorderRadius.circular(5),
+                                      toY: month["debit_total"],
+                                      color: isSelected
+                                          ? TColors.primary
+                                          : TColors.primary.withOpacity(0.5),
+                                      width: 15,
+                                    ),
+                                  ],
+                                  // Add background for selected bar
+                                  barsSpace: 4,
+                                );
+                              })
+                              .toList(),
+                          titlesData: FlTitlesData(
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  final month = controller
+                                      .availableMonths
+                                      .reversed
+                                      .toList()[value.toInt()];
+                                  return Text(
+                                    month["month"],
+                                    style: TextStyle(fontSize: 12),
+                                  );
+                                },
+                              ),
+                            ),
+                            topTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  final month = controller
+                                      .availableMonths
+                                      .reversed
+                                      .toList()[value.toInt()];
+                                  return Text(
+                                    KFormatters.formatAmountToKRupees(
+                                      month["debit_total"],
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          gridData: FlGridData(show: false),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -112,12 +215,16 @@ class AllTransactionsScreen extends StatelessWidget {
               unselectedLabelStyle: Theme.of(
                 context,
               ).textTheme.labelMedium!.copyWith(fontSize: 13),
-              tabs: controller.tabs.map((label) => Tab(text: label)).toList(),
+              tabs: controller.tabs
+                  .map((tab) => Tab(text: tab["name"] as String))
+                  .toList(),
             ),
             Expanded(
               child: TabBarView(
                 children: controller.tabs.map((label) {
-                  return SingleChildScrollView(child: KTransactionsSection());
+                  return SingleChildScrollView(
+                    child: label["section"] as Widget,
+                  );
                 }).toList(),
               ),
             ),

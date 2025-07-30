@@ -72,4 +72,16 @@ class IsarService extends GetxService {
         .dateTimeLessThan(endOfMonth)
         .findAll();
   }
+
+  Future<List<TransactionModel>> getTransactionsByDateRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    return await _isar.transactionModels
+        .filter()
+        .dateTimeGreaterThan(startDate)
+        .and()
+        .dateTimeLessThan(endDate)
+        .findAll();
+  }
 }

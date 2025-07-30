@@ -34,6 +34,7 @@ dependencies:
   flutter_background_service: ^5.1.0
   easy_sms_receiver: ^0.0.2
   animated_expand: ^1.0.2
+  fl_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:

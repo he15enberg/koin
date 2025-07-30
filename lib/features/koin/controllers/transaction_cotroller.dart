@@ -5,7 +5,6 @@ import 'package:koin/data/isar/models/transaction_model.dart';
 class TransactionController extends GetxController {
   static TransactionController get instance => Get.find();
 
-  final RxList<TransactionModel> transactions = <TransactionModel>[].obs;
   final RxList<TransactionModel> currentMonthTransactions =
       <TransactionModel>[].obs;
   final RxBool isLoading = true.obs;
@@ -14,21 +13,22 @@ class TransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadAllData();
+    loadCurrentMonthData();
   }
 
-  Future<void> loadAllData() async {
-    final allTransactions = await IsarService.instance.getAllTransactions();
+  Future<void> loadCurrentMonthData() async {
     final monthTransactions = await IsarService.instance
         .getCurrentMonthTransactions();
-    print(monthTransactions.length);
-    transactions.assignAll(allTransactions);
-    currentMonthTransactions.assignAll(monthTransactions);
 
+    currentMonthTransactions.assignAll(monthTransactions);
     currentMonthSpend.value = monthTransactions
         .where((t) => t.smsType == TransactionType.debit)
         .fold(0.0, (sum, t) => sum + t.amount);
 
     isLoading.value = false;
+  }
+
+  Future<void> refreshData() async {
+    await loadCurrentMonthData();
   }
 }

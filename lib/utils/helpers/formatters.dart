@@ -104,4 +104,11 @@ class KFormatters {
 
     return '$weekday, ${day}$suffix $month, $hour:$minute $ampm';
   }
+
+  // Add this helper function
+  static String formatAmountToKRupees(double amount) {
+    if (amount >= 100000) return '${(amount / 100000).toStringAsFixed(1)}L';
+    if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(1)}k';
+    return amount.toStringAsFixed(0);
+  }
 }
