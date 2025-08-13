@@ -84,22 +84,40 @@ class AllTransactionsController extends GetxController
     );
   }
 
-  // Category data for pie chart
   Map<String, List<TransactionModel>> getCategoriesData() {
     final Map<String, List<TransactionModel>> grouped = {};
+
+    // Group transactions by category
     for (final transaction in monthTransactions) {
       grouped.putIfAbsent(transaction.category, () => []).add(transaction);
     }
-    return grouped;
+
+    // Sort by total amount in each category (descending)
+    final sortedEntries = grouped.entries.toList()
+      ..sort((a, b) {
+        final totalA = a.value.fold<double>(0, (sum, txn) => sum + txn.amount);
+        final totalB = b.value.fold<double>(0, (sum, txn) => sum + txn.amount);
+        return totalB.compareTo(totalA); // Descending
+      });
+
+    // Return as a new map with sorted order
+    return Map.fromEntries(sortedEntries);
   }
 
-  // Merchant data
   Map<String, List<TransactionModel>> getMerchantsData() {
     final Map<String, List<TransactionModel>> grouped = {};
+
+    // Group by merchant name
     for (final transaction in monthTransactions) {
       grouped.putIfAbsent(transaction.merchantName, () => []).add(transaction);
     }
-    return grouped;
+
+    // Sort by transaction count (descending)
+    final sortedEntries = grouped.entries.toList()
+      ..sort((a, b) => b.value.length.compareTo(a.value.length));
+
+    // Preserve sorted order in a new map
+    return Map.fromEntries(sortedEntries);
   }
 
   // Get available months for dropdown

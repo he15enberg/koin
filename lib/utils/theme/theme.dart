@@ -16,6 +16,9 @@ class TAppTheme {
   TAppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: TColors.primary,
+    ),
     switchTheme: TSwitchTheme.lightSwitchTheme,
     useMaterial3: true,
     fontFamily: KAppConstants.kfontFamily,
@@ -34,6 +37,9 @@ class TAppTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: TColors.primary,
+    ),
     switchTheme: TSwitchTheme.darkSwitchTheme,
     useMaterial3: true,
     fontFamily: KAppConstants.kfontFamily,

@@ -3,8 +3,12 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:koin/common/widgets/appbar/screen_appbar.dart';
 import 'package:koin/common/widgets/button/simple_circular_icon_button.dart';
+import 'package:koin/common/widgets/transaction/section.dart';
+import 'package:koin/common/widgets/transaction/transaction_box.dart';
 import 'package:koin/data/isar/models/transaction_model.dart';
+import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
 import 'package:koin/utils/constants/colors.dart';
+import 'package:koin/utils/helpers/bank_directory.dart';
 import 'package:koin/utils/helpers/formatters.dart';
 import 'package:koin/utils/helpers/helper_functions.dart';
 
@@ -14,7 +18,12 @@ class TransactionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
+    final transactionController = TransactionController.instance;
     return Scaffold(
+      // backgroundColor: Color.alphaBlend(
+      //   Colors.white.withOpacity(0.95), // amount of white to mix in
+      //   KFormatters.getCategoryInfo(transaction.category)["color"],
+      // ),
       appBar: KScreenAppBar(
         text:
             "${transaction.smsType.name.toString().capitalize ?? "Unknown"} Transaction",
@@ -29,98 +38,125 @@ class TransactionScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 10,
+              //Transaction Box Widget
+              KTransactionBox(
+                date: KFormatters.formatDateTimeToLongString(
+                  transaction.dateTime,
                 ),
+                merchantName: transaction.merchantName,
+                visitsText: "62 visits",
+                smsType: transaction.smsType,
+                amount: KFormatters.formatToRupees(transaction.amount),
+                category: transaction.category,
+                isDark: isDark,
+              ),
 
+              SizedBox(height: 15),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
-                  color: isDark ? TColors.darkerGrey : TColors.grey,
+                  color: TColors.accent.withAlpha((255 * 0.5).toInt()),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      spacing: 10,
+                      spacing: 5,
                       children: [
-                        Expanded(
-                          child: Text(
-                            transaction.merchantName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
+                        Image.asset(
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.cover,
+                          BankDirectory.getBankInfo(
+                            transaction.bankCode,
+                          )!.image,
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            spacing: 5,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                  vertical: 7.5,
-                                ),
-
-                                decoration: BoxDecoration(
-                                  color: TColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  spacing: 5,
-                                  children: [
-                                    Text("62 visits"),
-                                    Icon(Icons.bar_chart_rounded, size: 17.5),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.arrow_outward, size: 15),
                         Text(
-                          KFormatters.formatToRupees(transaction.amount),
-                          style: Theme.of(context).textTheme.headlineLarge,
+                          transaction.bankCode,
+                          style: Theme.of(context).textTheme.bodyMedium!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          transaction.accountLastFourDigits,
+                          style: Theme.of(context).textTheme.bodyLarge!,
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        KSimpleCircularIconButton(
-                          padding: 5,
-                          iconsize: 20,
-                          icon: KFormatters.getCategoryInfo(
-                            transaction.category,
-                          )["icon"],
-                          backgroundColor: KFormatters.getCategoryInfo(
-                            transaction.category,
-                          )["color"],
-                          iconColor: Colors.white,
+                        Text(
+                          "Expense",
+                          style: Theme.of(context).textTheme.bodySmall!,
                         ),
-                        Text("Food and Drinks"),
+                        Obx(
+                          () => Transform.scale(
+                            scale: 0.75,
+                            child: Switch(
+                              value: transactionController
+                                  .isTransactionExpense
+                                  .value,
+                              onChanged: (value) =>
+                                  transactionController
+                                          .isTransactionExpense
+                                          .value =
+                                      value,
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                    Text(
-                      KFormatters.formatDateTimeToLongString(
-                        transaction.dateTime,
-                      ),
                     ),
                   ],
                 ),
               ),
-              Text(transaction.referenceNumber ?? "Unknown"),
-              Text(transaction.messageAddress ?? "Unknown"),
-              Text(transaction.messageBody ?? "Unknown"),
+
+              KTransactionSection(
+                icon: Iconsax.note_1,
+                title: "Notes",
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 7.5),
+                  child: TextField(),
+                ),
+              ),
+              KTransactionSection(
+                icon: Iconsax.tag,
+                title: "Tags",
+                action: Icon(Iconsax.add),
+              ),
+              KTransactionSection(
+                icon: Iconsax.firstline,
+                title: "Other Info",
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 7.5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Location",
+                        style: Theme.of(context).textTheme.labelMedium!,
+                      ),
+                      Text("See Map"),
+                      Divider(),
+                      Text(
+                        "Ref No",
+                        style: Theme.of(context).textTheme.labelMedium!,
+                      ),
+                      Text(transaction.referenceNumber ?? "Unknown"),
+                      Divider(),
+
+                      Text(
+                        "SMS",
+                        style: Theme.of(context).textTheme.labelMedium!,
+                      ),
+                      Text(
+                        "[${transaction.messageAddress}]\n${transaction.messageBody}" ??
+                            "Unknown",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
             ],
           ),
         ),

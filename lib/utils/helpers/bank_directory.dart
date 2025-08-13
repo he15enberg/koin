@@ -445,13 +445,7 @@ final List<BankInfo> bankInfoList = [
     dominantColor: Color(0xFF1F4F99), // J&K Blue
     lightColor: Color(0xFFB3C6E7),
   ),
-  BankInfo(
-    code: 'JIOPAY',
-    name: 'Jio Payments Bank',
-    image: 'assets/logos/Jio Payments Bank.png',
-    dominantColor: Color(0xFF1F4F99), // Jio Blue
-    lightColor: Color(0xFFB3C6E7),
-  ),
+
   BankInfo(
     code: 'JPMBK',
     name: 'JPMorgan Chase',

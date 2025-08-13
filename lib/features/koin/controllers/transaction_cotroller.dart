@@ -5,9 +5,11 @@ import 'package:koin/data/isar/models/transaction_model.dart';
 class TransactionController extends GetxController {
   static TransactionController get instance => Get.find();
 
+  final RxBool isTransactionExpense = true.obs;
+
   final RxList<TransactionModel> currentMonthTransactions =
       <TransactionModel>[].obs;
-  final RxBool isLoading = true.obs;
+  final RxBool isLoading = false.obs;
   final RxDouble currentMonthSpend = 0.0.obs;
 
   @override

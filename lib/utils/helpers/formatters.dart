@@ -1,12 +1,13 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:koin/utils/constants/colors.dart';
 
 Map<String, Map<String, dynamic>> categoryData = {
   "bills": {"icon": Iconsax.receipt, "color": Color(0xFF2196F3)},
   "emi": {"icon": Iconsax.card, "color": Color(0xFF9C27B0)},
   "entertainment": {"icon": Iconsax.music_play, "color": Color(0xFFE91E63)},
-  "food": {"icon": Iconsax.cup, "color": Color(0xFFFF5722)},
+  "food & drinks": {"icon": Iconsax.cup, "color": Color(0xFFFF5722)},
   "fuel": {"icon": Iconsax.gas_station, "color": Color(0xFF607D8B)},
   "groceries": {"icon": Iconsax.shopping_cart, "color": Color(0xFF4CAF50)},
   "health": {"icon": Iconsax.health, "color": Color(0xFFFF9800)},
@@ -56,7 +57,7 @@ class KFormatters {
 
   static Map<String, dynamic> getCategoryInfo(String? category) {
     return categoryData[category] ??
-        {"icon": Iconsax.information, "color": Colors.grey};
+        {"icon": Iconsax.information, "color": TColors.primary};
   }
 
   static String formatDateTimeToLongString(DateTime dateTime) {

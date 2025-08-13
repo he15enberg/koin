@@ -5,7 +5,7 @@ class CategoryClassifier {
     'bills',
     'emi',
     'entertainment',
-    'food',
+    'food & drinks',
     'fuel',
     'groceries',
     'health',
@@ -13,6 +13,7 @@ class CategoryClassifier {
     'shopping',
     'transfer',
     'travel',
+    'other',
   ];
 
   static const List<String> creditCategories = [
@@ -84,7 +85,7 @@ class CategoryClassifier {
       'zee5',
       'disney',
     ],
-    'food': [
+    'food & drinks': [
       'zomato',
       'swiggy',
       'uber eats',
@@ -226,6 +227,7 @@ class CategoryClassifier {
       'redbus',
       'transport',
     ],
+    "other": [],
   };
 
   static const Map<String, List<String>> _creditKeywords = {
