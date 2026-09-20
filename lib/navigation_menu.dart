@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:koin/dummy.dart';
-import 'package:koin/features/koin/screens/home/home.dart';
-import 'package:koin/features/koin/screens/profile/profile.dart';
-import 'package:koin/graph.dart';
+import 'package:koin/common/widgets/dummy_screen.dart';
+import 'package:koin/features/home/screens/home.dart';
+import 'package:koin/features/profile/screens/profile.dart';
+import 'package:koin/common/widgets/charts/monthly_bar_chart.dart';
 import 'utils/constants/colors.dart';
 import 'utils/helpers/helper_functions.dart';
 

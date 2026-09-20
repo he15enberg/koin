@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# SMS parser evaluation output (contains real, unredacted SMS/PII data)
+/sms-parser/evaluation/output/

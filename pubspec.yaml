@@ -23,8 +23,8 @@ dependencies:
   permission_handler: ^12.0.1
   image_picker: ^1.1.2
   dotted_border: ^3.1.0
-  isar: ^3.1.0+1
-  isar_flutter_libs: any
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
   path_provider: ^2.1.5
   flutter_sms_inbox: ^1.0.2
   flutter_contacts: ^1.1.9+2
@@ -39,8 +39,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.8
-  isar_generator: ^3.1.0+1
 
   flutter_lints: ^5.0.0
 

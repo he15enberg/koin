@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:koin/data/isar/isar_service.dart';
-import 'package:koin/features/authentication/controllers/splash_controller.dart';
-import 'package:koin/features/koin/controllers/transaction_cotroller.dart';
-import 'package:koin/utils/services/sms_listener.dart';
+import 'package:koin/data/local/app_database.dart';
+import 'package:koin/data/local/repositories/settings_repository.dart';
+import 'package:koin/data/local/repositories/transaction_repository.dart';
+import 'package:koin/features/onboarding/controllers/splash_controller.dart';
+import 'package:koin/features/transactions/controllers/transaction_controller.dart';
+import 'package:koin/services/sms_engine/sms_listener_service.dart';
 import 'app.dart';
 
 Future<void> main() async {
@@ -20,9 +22,15 @@ Future<void> main() async {
   );
 
   try {
-    // Single Isar initialization
-    if (!Get.isRegistered<IsarService>()) {
-      await Get.putAsync(() => IsarService().init(), permanent: true);
+    // Database + repositories, in dependency order
+    if (!Get.isRegistered<AppDatabase>()) {
+      await Get.putAsync(() => AppDatabase().init(), permanent: true);
+    }
+    if (!Get.isRegistered<SettingsRepository>()) {
+      await Get.putAsync(() => SettingsRepository().init(), permanent: true);
+    }
+    if (!Get.isRegistered<TransactionRepository>()) {
+      Get.put(TransactionRepository(), permanent: true);
     }
 
     // Initialize controllers only once

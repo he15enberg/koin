@@ -19,9 +19,6 @@ class App extends StatelessWidget {
         backgroundColor: TColors.primary,
         body: Center(child: CircularProgressIndicator(color: Colors.white)),
       ),
-      // initialBinding: InitialBindings(),
-      // home: startScreen,
-      // home: PersonaInfoScreen(),
     );
   }
 }

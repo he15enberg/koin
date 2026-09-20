@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:koin/common/widgets/shimmers/shimmer_effect.dart';
-import 'package:koin/features/koin/controllers/profile_controller.dart';
+import 'package:koin/features/profile/controllers/profile_controller.dart';
 import 'package:koin/utils/constants/image_strings.dart';
 import 'package:koin/utils/constants/sizes.dart';
 import 'package:koin/utils/helpers/helper_functions.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:koin/common/widgets/button/simple_circular_icon_button.dart';
-import 'package:koin/data/isar/models/transaction_model.dart';
+import 'package:koin/data/local/models/transaction_model.dart';
 import 'package:koin/utils/constants/colors.dart';
 import 'package:koin/utils/helpers/formatters.dart';
 
